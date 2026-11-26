@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createClient } from "@/lib/supabase/server";
-import { buildDemoTransactions } from "@/lib/demo-data";
-import { isDemoMode } from "@/lib/mode";
 import { categoryBreakdown, monthlySeries, summarize } from "@/lib/analytics";
 import { formatINR } from "@/lib/utils";
 import type { Transaction } from "@/types";
@@ -63,13 +61,6 @@ function localInsights(transactions: Transaction[]): Insight[] {
 }
 
 export async function GET() {
-  if (isDemoMode()) {
-    const transactions = buildDemoTransactions();
-    const summary = summarize(transactions);
-    const insights = localInsights(transactions);
-    return NextResponse.json({ insights, aiGenerated: false, source: "local", summary });
-  }
-
   const client = await createClient();
   const { data: userData } = await client.auth.getUser();
   const user = userData.user;

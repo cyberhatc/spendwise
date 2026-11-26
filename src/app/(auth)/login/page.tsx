@@ -84,10 +84,6 @@ export default function LoginPage() {
           Create an account
         </Link>
       </p>
-      <div className="mt-6 rounded-2xl bg-primary-50 p-4 text-center text-xs text-primary-800">
-        <p className="font-semibold">Demo account</p>
-        <p className="mt-1">Use any password (6+ chars) or <span className="font-mono">demo@spendwise.app</span> with any password to explore.</p>
-      </div>
     </Card>
   );
 }

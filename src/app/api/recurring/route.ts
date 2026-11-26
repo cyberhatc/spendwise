@@ -1,14 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { DEMO_RECURRING } from "@/lib/demo-data";
-import { isDemoMode } from "@/lib/mode";
 import { recurringSchema } from "@/lib/validation";
-import type { RecurringTransaction } from "@/types";
 
 export async function GET() {
-  if (isDemoMode()) {
-    return NextResponse.json({ data: DEMO_RECURRING });
-  }
   const client = await createClient();
   const { data: userData } = await client.auth.getUser();
   const user = userData.user;
@@ -19,12 +13,6 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  if (isDemoMode()) {
-    const body = await req.json();
-    const parsed = recurringSchema.parse(body);
-    const data: RecurringTransaction = { id: `demo_r_${Date.now()}`, user_id: "demo_user_spendwise", ...parsed, is_active: true, created_at: new Date().toISOString() };
-    return NextResponse.json({ data }, { status: 201 });
-  }
   const client = await createClient();
   const { data: userData } = await client.auth.getUser();
   const user = userData.user;
@@ -52,9 +40,6 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  if (isDemoMode()) {
-    return NextResponse.json({ ok: true });
-  }
   const client = await createClient();
   const { data: userData } = await client.auth.getUser();
   const user = userData.user;

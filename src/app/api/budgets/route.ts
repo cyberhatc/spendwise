@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { DEMO_BUDGETS } from "@/lib/demo-data";
-import { isDemoMode } from "@/lib/mode";
 
 async function requireUser() {
   const client = await createClient();
@@ -12,9 +10,6 @@ async function requireUser() {
 }
 
 export async function GET(req: Request) {
-  if (isDemoMode()) {
-    return NextResponse.json({ data: DEMO_BUDGETS });
-  }
   const { client, user } = await requireUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -29,12 +24,6 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  if (isDemoMode()) {
-    const body = await req.json();
-    const { category, monthly_limit } = body;
-    const budget = { id: `demo_b_${Date.now()}`, user_id: "demo_user_spendwise", category, monthly_limit, created_at: new Date().toISOString() };
-    return NextResponse.json({ data: budget }, { status: 201 });
-  }
   const { client, user } = await requireUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json();
@@ -68,9 +57,6 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  if (isDemoMode()) {
-    return NextResponse.json({ ok: true });
-  }
   const { client, user } = await requireUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { searchParams } = new URL(req.url);

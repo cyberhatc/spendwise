@@ -47,8 +47,8 @@ export default function LandingPage() {
               <Link href="/signup" className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary-500 px-6 font-semibold text-white shadow-soft transition-all hover:bg-primary-600">
                 Start tracking free <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/dashboard" className="inline-flex h-12 items-center justify-center rounded-xl border border-primary-200 bg-white px-6 font-semibold text-primary-700 transition-colors hover:bg-primary-50">
-                Explore demo
+              <Link href="/login" className="inline-flex h-12 items-center justify-center rounded-xl border border-primary-200 bg-white px-6 font-semibold text-primary-700 transition-colors hover:bg-primary-50">
+                Log in
               </Link>
             </div>
             <p className="mt-4 text-sm text-ink-500">Free forever for students · No credit card required</p>

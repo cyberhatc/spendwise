@@ -1,12 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { DEMO_DISCOUNTS } from "@/lib/demo-data";
-import { isDemoMode } from "@/lib/mode";
 
 export async function GET() {
-  if (isDemoMode()) {
-    return NextResponse.json({ data: DEMO_DISCOUNTS });
-  }
   const client = await createClient();
   const { data: userData } = await client.auth.getUser();
   const user = userData.user;
@@ -17,11 +12,6 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  if (isDemoMode()) {
-    const body = await req.json();
-    const discount = { id: `demo_d_${Date.now()}`, user_id: "demo_user_spendwise", ...body };
-    return NextResponse.json({ data: [discount] });
-  }
   const client = await createClient();
   const { data: userData } = await client.auth.getUser();
   const user = userData.user;
@@ -36,9 +26,6 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  if (isDemoMode()) {
-    return NextResponse.json({ ok: true });
-  }
   const client = await createClient();
   const { data: userData } = await client.auth.getUser();
   const user = userData.user;

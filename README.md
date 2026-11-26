@@ -15,11 +15,10 @@ Next.js · TypeScript · Tailwind CSS · Supabase · Recharts · Gemini AI
 6. [Gemini AI setup](#gemini-ai-setup)
 7. [Environment variables](#environment-variables)
 8. [Database schema & migrations](#database-schema--migrations)
-9. [Demo mode](#demo-mode)
-10. [Project structure](#project-structure)
-11. [Scripts](#scripts)
-12. [Deployment](#deployment)
-13. [Security notes](#security-notes)
+9. [Project structure](#project-structure)
+10. [Scripts](#scripts)
+11. [Deployment](#deployment)
+12. [Security notes](#security-notes)
 
 ---
 
@@ -114,16 +113,6 @@ npm run dev
 
 Open <http://localhost:3000>.
 
-### Demo mode
-
-If Supabase environment variables are missing or you set `NEXT_PUBLIC_DEMO_MODE=true`,
-the app runs in **demo mode** with realistic sample student transactions (clearly marked as
-demo data) stored locally — perfect for previews and local testing.
-
-```bash
-NEXT_PUBLIC_DEMO_MODE=true npm run dev
-```
-
 ## Supabase setup
 
 1. Create a project at <https://supabase.com/dashboard>.
@@ -180,7 +169,6 @@ SUPABASE_SERVICE_ROLE_KEY=
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-1.5-flash
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_DEMO_MODE=false
 ```
 
 ## Database schema & migrations
@@ -193,14 +181,6 @@ Migrations live in [`supabase/migrations/`](./supabase/migrations). They create:
 - Indexes on user_id and created_at/transaction date
 
 All user-scoped tables include RLS policies so users can only read/insert/update their own rows.
-
-## Demo mode
-
-When Supabase credentials are absent (or `NEXT_PUBLIC_DEMO_MODE=true`), SpendWise uses a
-local demo store seeded with realistic student transactions:
-
-- Meals, transport, tuition, shopping, entertainment, rent, bills, health, income.
-- Marked as demo data; not persisted to any remote backend.
 
 ## Project structure
 
@@ -242,7 +222,6 @@ spendwise/
 │   ├── lib/
 │   │   ├── supabase/
 │   │   ├── analytics.ts
-│   │   ├── demo-data.ts
 │   │   ├── format.ts
 │   │   ├── validation.ts
 │   │   └── ...
@@ -290,7 +269,6 @@ configuring the Next.js framework preset, build command (`next build`), install 
    | `GEMINI_API_KEY` | Live mode | Google AI Studio key for the assistant |
    | `GEMINI_MODEL` | Optional | Defaults to `gemini-1.5-flash` |
    | `NEXT_PUBLIC_APP_URL` | Live mode | Your Vercel deployment URL, e.g. `https://spendwise.vercel.app` |
-   | `NEXT_PUBLIC_DEMO_MODE` | Optional | `false` for live, `true` for demo |
 
 5. Redeploy after adding the variables (Vercel only injects env vars at build time for
    `NEXT_PUBLIC_*` values).
@@ -318,12 +296,6 @@ And, for local dev, keep:
 http://localhost:3000/auth/callback
 ```
 
-#### Post-deploy: demo mode
-
-If you deploy without Supabase credentials configured, the app runs in **demo mode**
-locally seeded — on Vercel you can set `NEXT_PUBLIC_DEMO_MODE=true` to ship a working demo
-deployment without any backend.
-
 ### Other hosts
 
 Any Node.js host that supports Next.js (e.g. Render, Railway, Fly.io) can build the same
@@ -345,7 +317,6 @@ npm start
 - [ ] `GEMINI_API_KEY` set (server-side only; AI falls back gracefully if missing)
 - [ ] `NEXT_PUBLIC_APP_URL` set to the production URL
 - [ ] Supabase redirect URL allow-listed: `https://<your-domain>/auth/callback`
-- [ ] `NEXT_PUBLIC_DEMO_MODE=false` (live) or `true` (demo)
 
 ## Security notes
 
@@ -354,7 +325,6 @@ npm start
   to the browser.
 - Supabase Row Level Security policies restrict all queries to the authenticated user.
 - Input validation is enforced with Zod on both client and server.
-- Demo mode data never touches remote backends.
 
 ---
 

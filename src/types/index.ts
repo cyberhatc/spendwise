@@ -12,8 +12,6 @@ export interface Transaction {
   date: string;
   created_at: string;
   updated_at?: string;
-  /** True for rows created through the demo mode store. */
-  is_demo?: boolean;
 }
 
 export interface Budget {

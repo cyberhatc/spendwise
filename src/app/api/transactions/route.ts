@@ -1,37 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { transactionSchema } from "@/lib/validation";
-import { buildDemoTransactions } from "@/lib/demo-data";
-import { isDemoMode } from "@/lib/mode";
 import type { Transaction } from "@/types";
 
 export async function GET(req: Request) {
-  if (isDemoMode()) {
-    const url = new URL(req.url);
-    const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10) || 1);
-    const pageSize = Math.min(500, Math.max(1, parseInt(url.searchParams.get("pageSize") ?? "10", 10) || 10));
-    const search = url.searchParams.get("search") ?? "";
-    const category = url.searchParams.get("category") ?? "";
-    const type = url.searchParams.get("type") ?? "";
-    const month = url.searchParams.get("month") ?? "";
-
-    let list = [...buildDemoTransactions()];
-    if (type) list = list.filter((t) => t.type === type);
-    if (category) list = list.filter((t) => t.category === category);
-    if (month) list = list.filter((t) => (t.date ?? "").slice(0, 7) === month);
-    if (search) {
-      const q = search.trim().toLowerCase();
-      list = list.filter((t) => t.description.toLowerCase().includes(q) || t.category.toLowerCase().includes(q));
-    }
-    list.sort((a, b) => (b.date < a.date ? -1 : b.date > a.date ? 1 : b.created_at < a.created_at ? -1 : 1));
-    const total = list.length;
-    const totalPages = Math.max(1, Math.ceil(total / pageSize));
-    const safePage = Math.min(page, totalPages);
-    const start = (safePage - 1) * pageSize;
-    const transactions = list.slice(start, start + pageSize);
-    return NextResponse.json({ data: { transactions, total, page: safePage, pageSize, totalPages } });
-  }
-
   const client = await createClient();
   const { data: userData } = await client.auth.getUser();
   const user = userData.user;
